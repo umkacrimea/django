@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ book.name }} — {{ book.author }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h5>
+            <a href="{% url 'books' %}">← Вернуться в каталог</a>
+        </h5>
+        <h1>{{ book.name }}</h1>
+    </div>
+
+    <div class="book-detail" style="max-width: 600px; margin: 30px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+        <h2 style="margin-bottom: 20px;">{{ book.name }}</h2>
+        
+        <div class="book-info" style="line-height: 2;">
+            <p><strong>👤 Автор:</strong> {{ book.author }}</p>
+            <p><strong>📅 Дата публикации:</strong> {{ book.pub_date }}</p>
+        </div>
+        
+        <hr style="margin: 20px 0;">
+        
+        <div class="book-actions">
+            <a href="{% url 'books' %}" class="btn btn-outline-secondary">← Все книги</a>
+            <a href="{% url 'books_by_date' book.pub_date %}" class="btn btn-outline-primary">
+                📅 Другие книги за {{ book.pub_date }}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

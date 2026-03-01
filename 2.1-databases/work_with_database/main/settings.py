@@ -50,12 +50,8 @@ MIDDLEWARE = [
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'netology_import_phones',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-        'USER': 'postgres',
-        'PASSWORD': 'ваш пароль',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME':'db.sqlite3',
     }
 }
 
@@ -120,3 +116,5 @@ STATICFILES_DIRS = [
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+PHONES_CSV = os.path.join(BASE_DIR, 'phones.csv')

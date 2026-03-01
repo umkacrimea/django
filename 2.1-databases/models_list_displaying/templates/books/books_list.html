@@ -1,23 +1,74 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Каталог книг{% endblock %}
+{% block title %}{{ page_title|default:"Каталог книг" }}{% endblock %}
+
 {% block content %}
-    <div class="container">
-        <div class="header">
-            <h1><a href="/books">Каталог</a></h1>
-        </div>
-        <div class="row">
-            <div class="book col-md-4">
-                <h2>Сияние</h2>
-                <p>Автор: Стивен Кинг</p>
-                <p>Дата публикации: 2018-09-10</p>
-            </div>
-            <div class="book col-md-4">
-                <h2>1984</h2>
-                <p>Автор: Джордж Оруэл</p>
-                <p>Дата публикации: 2015-03-11</p>
-            </div>
-        </div>
+<div class="container">
+    <div class="header">
+        <h1>
+            <a href="{% url 'books' %}">Каталог</a>
+            {% if current_date %}
+                <small style="font-size: 0.6em; color: #666;">→ за {{ current_date }}</small>
+            {% endif %}
+        </h1>
     </div>
+
+    {# Пагинация по датам #}
+    {% if show_pagination %}
+    <div class="pagination-dates" style="margin: 20px 0; display: flex; gap: 15px; align-items: center;">
+        {% if prev_date %}
+            <a href="{% url 'books_by_date' prev_date %}" class="btn btn-secondary">← {{ prev_date }}</a>
+        {% else %}
+            <span class="btn btn-secondary disabled">← начало</span>
+        {% endif %}
+        
+        <span style="font-weight: bold;">{{ current_date }}</span>
+        
+        {% if next_date %}
+            <a href="{% url 'books_by_date' next_date %}" class="btn btn-secondary">{{ next_date }} →</a>
+        {% else %}
+            <span class="btn btn-secondary disabled">конец →</span>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {# Список книг #}
+    <div class="row">
+        {% if books %}
+            {% for book in books %}
+            <div class="book col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        {# ← Ссылка на детальную страницу #}
+                        <h2 class="card-title">
+                            <a href="{% url 'book_detail' book.pk %}" style="text-decoration: none; color: inherit;">
+                                {{ book.name }}
+                            </a>
+                        </h2>
+                        <p class="card-text"><strong>Автор:</strong> {{ book.author }}</p>
+                        <p class="card-text"><strong>Дата публикации:</strong> {{ book.pub_date }}</p>
+                        
+                        {# Кнопка "Подробнее" #}
+                        <a href="{% url 'book_detail' book.pk %}" class="btn btn-sm btn-primary">
+                            Подробнее →
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <p class="alert alert-info">📭 Нет книг для отображения</p>
+            </div>
+        {% endif %}
+    </div>
+
+    {# Кнопка "Назад ко всем книгам" #}
+    {% if current_date %}
+    <div style="margin-top: 30px;">
+        <a href="{% url 'books' %}" class="btn btn-outline-primary">← Все книги</a>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
