@@ -2,17 +2,41 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Рецепты</title>
+    <title>Кулинарные рецепты</title>
 </head>
 <body>
-{% for ingredient, amount in recipe.items %}
-    <p>{{ ingredient }}: {{ amount }}</p>
-{% empty %}
-    <p>Такого рецепта не знаю</p>
+    {% if recipes %}
+        <!-- Случай 1: выбираем рецепт -->
+        <h1>Выберите рецепт блюда:</h1>
+        <ul>
+            {% for recipe in recipes %}
+                <li><a href="{% url 'show_recipe' recipe %}">{{ recipe }}</a></li>
+            {% endfor %}
+        </ul>
+    {% elif recipe %}
+        <!-- Случай 2: просмотр рецепта -->
+        <form method="POST" action="">{% csrf_token %}
+            <label for="servings">Количество порций:</label>
+            <input type="number" id="servings" name="servings" value="1" min="1"/>
+            <button type="submit">Рассчитать</button>
+        </form>
 
-    http://127.0.0.1:8000/omlet/ список ингредиентов и их количество для приготовления омлета на одну порцию
-
-    http://127.0.0.1:8000/omlet/?servings=4 список ингредиентов и их количество для приготовления макарон с сыром
-{% endfor %}
+        <h1>{{ title }} Recipe</h1>
+        <table border="1">
+            <tr>
+                <th>Ингредиент</th>
+                <th>Количество</th>
+            </tr>
+            {% for ingredient, quantity in recipe.items %}
+                <tr>
+                    <td>{{ ingredient }}</td>
+                    <td>{{ quantity }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <!-- Сообщение об ошибке -->
+        <h1>{{ message|default:"Рецепта не найдено." }}</h1>
+    {% endif %}
 </body>
 </html>

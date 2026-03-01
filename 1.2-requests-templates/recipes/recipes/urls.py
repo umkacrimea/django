@@ -1,7 +1,7 @@
 from django.urls import path
-from calculator.views import show_recipe, homepage_view   
+from calculator.views import show_recipe   
 
 urlpatterns = [
-      path('', homepage_view, name='homepage'),    # новая точка входа для /
-      path('<slug:dish>/', show_recipe, name='show_recipe'),    # существующий маршрут
+      path('', show_recipe, name='show_recipe'),                   # Главное меню (выбор рецепта)
+      path('<slug:dish>/', show_recipe, name='show_recipe'),       # Отдельный рецепт
 ]
