@@ -2,11 +2,36 @@
 {% load static %}
 
 {% block title %}Список учеников{% endblock %}
+
 {% block content %}
 <div class="row">
+  <h2>Ученики школы</h2>
+  
+  {# Сортировка #}
+  <div style="margin: 15px 0;">
+    <strong>Сортировать:</strong>
+    <a href="?order=group">По классу</a> |
+    <a href="?order=name">По имени</a>
+  </div>
+  
   <ul>
   {% for student in object_list %}
-    <li>{{ student.name }} {{ student.group }} <br> Преподаватель: {{ student.teacher.name }} {{ student.teacher.subject }}</li>
+    <li style="margin-bottom: 15px; padding: 10px; border-bottom: 1px solid #eee;">
+      <strong>{{ student.name }}</strong> — класс {{ student.group }}
+      <br>
+      <strong>Учителя:</strong>
+      {% if student.teachers.exists %}
+        {% for teacher in student.teachers.all %}
+          <span style="background: #e3f2fd; padding: 2px 8px; border-radius: 4px; margin-right: 5px;">
+            {{ teacher.name }}: {{ teacher.subject }}
+          </span>
+        {% endfor %}
+      {% else %}
+        <em style="color: #666;">нет учителей</em>
+      {% endif %}
+    </li>
+  {% empty %}
+    <li>📭 Нет учеников в базе</li>
   {% endfor %}
   </ul>
 </div>

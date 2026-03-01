@@ -1,5 +1,4 @@
 {% extends "articles/base.html" %}
-
 {% load static %}
 
 {% block title %}Новости{% endblock %}
@@ -15,12 +14,19 @@
               <a href="#">{{ article.title }}</a>
             </h4>
             <p class="card-text">{{ article.text }}</p>
-            {% for scope in article.scopes.all %}
-              <span class="badge {% if scope.is_main %}badge-primary{% else %}badge-secondary{% endif %}">{{ scope.tag.name }}</span>
+            
+            {# ← Важно: scope_items.all, а не scopes.all #}
+            {% for scope in article.scope_items.all %}
+              <span class="badge {% if scope.is_main %}badge-primary{% else %}badge-secondary{% endif %}">
+                {{ scope.tag.name }}
+              </span>
             {% endfor %}
+            
           </div>
         </div>
       </div>
+    {% empty %}
+      <p>Нет статей для отображения</p>
     {% endfor %}
   </div>
 {% endblock %}
