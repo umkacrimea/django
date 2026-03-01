@@ -19,12 +19,33 @@ DATA = {
     # можете добавить свои рецепты ;)
 }
 
-# Напишите ваш обработчик. Используйте DATA как источник данных
-# Результат - render(request, 'calculator/index.html', context)
-# В качестве контекста должен быть передан словарь с рецептом:
-# context = {
-#   'recipe': {
-#     'ингредиент1': количество1,
-#     'ингредиент2': количество2,
-#   }
-# }
+def show_recipe(request, dish):
+    """
+    Отображает рецепт блюда с учётом количества порций.
+    :param request: HTTP-запрос
+    :param dish: Название блюда (например, omlet, pasta)
+    :return: Рендер страницы с рецептом
+    """
+    recipe_data = DATA.get(dish)
+    if not recipe_data:
+        return render(request, 'calculator/error.html', {'message': f'Рецепт {dish} не найден'})
+
+    # Получаем количество порций из GET-параметра
+    servings = int(request.GET.get('servings', 1))
+
+    # Умножаем ингредиенты на количество порций
+    scaled_recipe = {}
+    for ingredient, amount in recipe_data.items():
+        scaled_recipe[ingredient] = round(amount * servings, 2)
+
+    context = {
+        'recipe': scaled_recipe,
+        'title': dish.capitalize(),
+    }
+    return render(request, 'calculator/index.html', context)
+
+
+def homepage_view(request):
+    message = "Выберите рецепт блюда:"
+    available_recipes = list(DATA.keys())  # Список доступных рецептов
+    return render(request, 'calculator/index.html', {'message': message, 'recipes': available_recipes})
