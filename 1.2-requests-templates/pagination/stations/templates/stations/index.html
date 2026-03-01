@@ -1,23 +1,14 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <!-- Basic Page Needs -->
     <meta charset="utf-8">
-    <title>Title</title>
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <!-- Mobile Specific Metas -->
+    <title>Остановки общественного транспорта</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- FONT -->
     <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="{% static "css/normalize.css" %}">
-    <link rel="stylesheet" href="{% static "css/skeleton.css" %}">
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'css/skeleton.css' %}">
 </head>
 <body>
 <div class="container">
@@ -31,23 +22,36 @@
             </tr>
             </thead>
             <tbody>
-            {% for station in bus_stations %}
+            {% if bus_stations %}
+                {% for station in bus_stations %}
+                    <tr>
+                        <td>{{ station.Name }}</td>
+                        <td>{{ station.Street }}</td>
+                        <td>{{ station.District }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
                 <tr>
-                    <td>{{ station.Name }}</td>
-                    <td>{{ station.Street }}</td>
-                    <td>{{ station.District }}</td>
+                    <td colspan="3" style="text-align: center;">Нет данных для отображения</td>
                 </tr>
-            {% endfor %}
+            {% endif %}
             </tbody>
         </table>
 
-        {% if page.has_previous %}
-            <a class="button button-primary" href="?page={{ page.previous_page_number }}">⟵</a>
-        {% endif %}
-        <a class="button disabled" href="">{{ page.number }}</a>
-        {% if page.has_next %}
-            <a class="button button-primary" href="?page={{ page.next_page_number }}">⟶</a>
-        {% endif %}
+        {# Навигация пагинации #}
+        <div style="margin-top: 20px; text-align: center;">
+            {% if page.has_previous %}
+                <a class="button button-primary" href="?page={{ page.previous_page_number }}">⟵ Назад</a>
+            {% endif %}
+
+            <span style="margin: 0 15px; font-weight: bold;">
+                Страница {{ page.number }} из {{ page.paginator.num_pages }}
+            </span>
+
+            {% if page.has_next %}
+                <a class="button button-primary" href="?page={{ page.next_page_number }}">Вперёд ⟶</a>
+            {% endif %}
+        </div>
     </div>
 </div>
 </body>
